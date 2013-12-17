@@ -48,7 +48,7 @@ public class GameServer {
 			{
 				clientSocket = serverSocket.accept();
 				players.add(new PlayerThread(clientSocket));
-				/**if (message.equals("click")){
+				/*if (message.equals("click")){
 					System.out.println ("trying to reset");
 					game.reset();
 				}

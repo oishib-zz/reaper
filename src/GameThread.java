@@ -18,10 +18,11 @@ public class GameThread extends Thread{
 			catch (InterruptedException e) {}
 		 }
 	}
-	public void reset(){
+	public long click(){
+		long win=points;
 		points = 1;
+		return win;
 	}
-	
 	public long getPoints(){
 		return points;
 	}
