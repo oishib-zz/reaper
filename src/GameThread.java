@@ -22,6 +22,9 @@ public class GameThread extends Thread{
       }
     }
   }
+  public int getJackpot(){
+	  return points;
+  }
 
   //Mutation methods
   public void addPlayer(int id) {
