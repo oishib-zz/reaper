@@ -33,8 +33,9 @@ public class GameServer {
       while (true) //Serve forever
       {
         id++;
-        (new PlayerThread(serverSocket.accept(), id)).start(); // As we accept connection, instantiate threads for them
-        game.addPlayer(id);
+        PlayerThread player = new PlayerThread(serverSocket.accept(), id);
+        player.start(); // As we accept connection, instantiate threads for them
+        game.addPlayer(id, player);
       }
     }
     catch(IOException e)

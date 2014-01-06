@@ -4,7 +4,8 @@ import java.io.PrintWriter;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class PlayerThread extends Thread{
   private Socket client;
@@ -29,18 +30,22 @@ public class PlayerThread extends Thread{
     game = g;
   }
 
+  public void message(HashMap<Integer, Integer> scores) {
+    out.println(game.getScore(id));
+    out.println(game.getJackpot());
+    out.println("_START");
+    for (Entry<Integer, Integer> score : scores.entrySet()) {
+      out.println(score.getKey());
+      out.println(score.getValue());
+    }
+    out.println("_END");
+  }
+
   public void run(){
     try {
       String message;
       while ((message = in.readLine()) != null){
-    	if (message.equals("reap")) {
-    		game.reap(id);
-    	}
-    	else if (message.equals("update")) {
-    		out.println("your points: "+ game.getScore(id));
-    		out.println ("current jackpot: "+game.getJackpot());
-    	}
-        
+        game.reap(id);
       }
       game.quitPlayer(id);
       client.close();
