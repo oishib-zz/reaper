@@ -22,8 +22,6 @@ public class GameThread extends Thread{
         for (PlayerThread player : players.values()) {
           player.message(scores);
         }
-
-        System.out.printf("Points: %d\n", points);
       } 
       catch (InterruptedException e) {
         //pass

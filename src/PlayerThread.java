@@ -7,12 +7,13 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-public class PlayerThread extends Thread{
+public class PlayerThread extends Thread {
   private Socket client;
   private PrintWriter out;
   private BufferedReader in;
   private static GameThread game;
   private int id;
+  private int lastReap = -1;
   
   public PlayerThread (Socket client, int id){
     this.client=client;
@@ -45,9 +46,18 @@ public class PlayerThread extends Thread{
     try {
       String message;
       while ((message = in.readLine()) != null){
-        game.reap(id);
+        if (lastReap == -1 || game.getJackpot() < lastReap) {
+          lastReap = game.getJackpot();
+          game.reap(id);
+        }
+        if (lastReap == 1) {
+          game.quitPlayer(id);
+        }
       }
+      System.out.printf("Player socket closed: %d\n", id);
       game.quitPlayer(id);
+      out.close();
+      in.close();
       client.close();
     }
     catch (IOException e) {

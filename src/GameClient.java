@@ -26,6 +26,7 @@ public class GameClient implements ActionListener{
   private JLabel scores;
 
   private JButton reapButton;
+  private JButton closeButton;
   public GameClient(){
     try {
       socket = new Socket("localhost", 9001);
@@ -41,21 +42,26 @@ public class GameClient implements ActionListener{
 
 
     //set up JFrame
-    gameFrame = new JFrame("reaper");
+    gameFrame = new JFrame("Reaper");
     gamePanel = new JPanel();
+    gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.PAGE_AXIS));
     gameFrame.add(gamePanel);
 
     jackpot = new JLabel ("");
     points = new JLabel ("");
     scores = new JLabel ("");
-    reapButton = new JButton ("reap");
+    reapButton = new JButton ("REAP");
+    closeButton = new JButton("CLOSE");
     reapButton.addActionListener(this);
+    closeButton.addActionListener(this);
     gamePanel.add (new JLabel("Current Jackpot:"));
     gamePanel.add (jackpot);
     gamePanel.add (new JLabel("Your Score:"));
     gamePanel.add (points);
-    gamePanel.add (reapButton);
+    gamePanel.add (new JLabel("Scores:"));
     gamePanel.add (scores);
+    gamePanel.add (reapButton);
+    gamePanel.add (closeButton);
 
     gameFrame.add(gamePanel);
 
@@ -77,12 +83,13 @@ public class GameClient implements ActionListener{
       jackpot.setText(in.readLine());
       if (in.readLine().equals("_START")) {
         String line;
-        String assembled = "";
+        String assembled = "<html>";
         while (!(line = in.readLine()).equals("_END")) {
-          assembled += line + ":";
+          assembled += line + ": ";
           assembled += in.readLine();
-          assembled += ",";
+          assembled += "<br/>";
         }
+        assembled += "</html>";
         scores.setText(assembled);
       }
     } catch (IOException e) {
@@ -95,6 +102,18 @@ public class GameClient implements ActionListener{
   public void actionPerformed(ActionEvent e) {
     if (e.getSource()==reapButton){
       out.println("");
+    }
+    else if (e.getSource()==closeButton) {
+      try {
+        in.close();
+        out.close();
+        socket.close();
+        System.exit(0);
+      }
+      catch (IOException err) {
+        err.printStackTrace();
+        System.exit(1);
+      }
     }
     //handle window closing
 
